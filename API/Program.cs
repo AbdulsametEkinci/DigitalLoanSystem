@@ -22,6 +22,7 @@ builder.Services.AddScoped<IPricingEngineService, MockPricingEngineAdapter>();
 
 // Application Services
 builder.Services.AddScoped<ILoanApplicationService, LoanApplicationService>();
+builder.Services.AddScoped<ICustomerApplicationService, CustomerApplicationService>();
 
 // Domain Factories
 builder.Services.AddSingleton<ILoanStrategyFactory, LoanStrategyFactory>();

@@ -8,5 +8,6 @@ namespace DigitalLoanSystem.Application.Interfaces
     {
         // Gelen ID'ye göre veritabanından müşteriyi bulup getirecek
         Task<Customer> GetByIdAsync(Guid id);
+        Task AddAsync(Customer customer);
     }
 }
