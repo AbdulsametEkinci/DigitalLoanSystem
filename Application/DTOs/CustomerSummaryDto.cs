@@ -12,6 +12,7 @@ namespace DigitalLoanSystem.Application.DTOs
     );
 
     public record InstallmentSummaryDto(
+        Guid Id,
         Guid LoanId,
         int InstallmentNumber,
         decimal Amount,

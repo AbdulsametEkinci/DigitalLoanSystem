@@ -24,5 +24,9 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
         {
             await _context.Customers.AddAsync(customer);
         }
+        public async Task DeleteAsync(Customer customer)
+        {
+            _context.Customers.Remove(customer);
+        }
     }
 }

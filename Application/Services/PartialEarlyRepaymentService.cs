@@ -194,6 +194,7 @@ namespace DigitalLoanSystem.Application.Services
             var newInstallmentPlan = newInstallments
                 .OrderBy(i => i.DueDate)
                 .Select(i => new InstallmentSummaryDto(
+                    i.Id,
                     i.LoanId,
                     i.InstallmentNumber,
                     i.Amount,

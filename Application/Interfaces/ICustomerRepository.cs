@@ -8,5 +8,6 @@ namespace DigitalLoanSystem.Application.Interfaces
     {
         Task<Customer?> GetByIdAsync(Guid id);
         Task AddAsync(Customer customer);
+        Task DeleteAsync(Customer customer);
     }
 }

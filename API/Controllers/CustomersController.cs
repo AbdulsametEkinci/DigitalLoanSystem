@@ -48,5 +48,29 @@ namespace DigitalLoanSystem.API.Controllers
                 return StatusCode(500, new { Error = "Özet hesaplanırken bir hata oluştu: " + ex.Message });
             }
         }
+
+        /// <summary>
+        /// Müşteri silme işlemi
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest("Geçerli bir Müşteri ID'si girmelisiniz.");
+
+            try
+            {
+                var result = await _customerService.DeleteCustomerAsync(id);
+                return NoContent(); // 204 No Content
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Error = ex.Message }); // 404 Not Found
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { Error = "Müşteri silinirken bir hata oluştu: " + ex.Message });
+            }
+        }
     }
 }

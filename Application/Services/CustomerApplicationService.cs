@@ -74,8 +74,8 @@ namespace DigitalLoanSystem.Application.Services
                 var unpaid = orderedInstallments.Where(i => !i.IsPaid).ToList();
                 var paidInstallmentsCount = orderedInstallments.Count(i => i.IsPaid);
 
-                // A. Toplam Kredi Borcu
-                totalRemainingDebt += unpaid.Sum(i => i.Amount);
+                // A. Toplam Kredi Borcu (sadece Status 1 olan taksitler)
+                totalRemainingDebt += unpaid.Where(i => i.Status == Domain.Enums.InstallmentStatus.Unpaid).Sum(i => i.Amount);
 
                 // B. Kalan Anapara (Ödenen taksit sayısı oranında anapara azalır)
                 // Her ödenen taksit, anapranın 1/TermInMonths'unu emekli eder
@@ -93,9 +93,11 @@ namespace DigitalLoanSystem.Application.Services
                 {
                     bool isPaid = installment.IsPaid;
                     bool isDelayed = installment.IsDelayed;
-                    string statusDisplay = isPaid ? "Ödendi" : (isDelayed ? "Gecikmiş" : "Ödenmedi");
+                    bool isCanceled = installment.Status == Domain.Enums.InstallmentStatus.Canceled;
+                    string statusDisplay = isPaid ? "Ödendi" : (isDelayed ? "Gecikmiş" : isCanceled ? "İptal Edilmiş" : "Ödenmedi");
 
                     var dto = new InstallmentSummaryDto(
+                        installment.Id,
                         installment.LoanId,
                         installment.InstallmentNumber,
                         installment.Amount,
@@ -129,6 +131,16 @@ namespace DigitalLoanSystem.Application.Services
                 installments,
                 unpaidInstallments
             );
+        }
+        public async Task<bool> DeleteCustomerAsync(Guid customerId)
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new InvalidOperationException($"Müşteri ID'si {customerId} bulunamadı.");
+
+            await _customerRepository.DeleteAsync(customer);
+            await _unitOfWork.CommitAsync();
+            return true;
         }
 
     }

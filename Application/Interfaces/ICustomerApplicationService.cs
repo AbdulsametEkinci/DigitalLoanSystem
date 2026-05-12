@@ -7,5 +7,6 @@ namespace DigitalLoanSystem.Application.Interfaces
     {
         Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerDto dto);
         Task<CustomerSummaryDto> GetCustomerSummaryAsync(Guid customerId);
+        Task<bool> DeleteCustomerAsync(Guid customerId);
     }
 }

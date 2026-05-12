@@ -40,6 +40,9 @@ namespace DigitalLoanSystem.Application.Services
             if (installment.Loan.Status == LoanStatus.Closed)
                 throw new Exception("Bu kredi zaten kapatılmış.");
 
+            if (installment.Status == InstallmentStatus.Canceled)
+                throw new Exception("Bu kredi iptal edilmiştir. Ödeme yapılamaz.");
+
             // Taksit Zaten Ödenmiş Kontrolü
             if (installment.IsPaid)
                 throw new Exception("Bu taksit zaten ödenmiş.");
