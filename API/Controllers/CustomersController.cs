@@ -6,7 +6,7 @@ using DigitalLoanSystem.Application.Interfaces;
 namespace DigitalLoanSystem.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerApplicationService _customerService;
@@ -22,7 +22,7 @@ namespace DigitalLoanSystem.API.Controllers
             try
             {
                 var response = await _customerService.CreateCustomerAsync(requestDto);
-                return Created($"/api/v1/customers/{response.Id}", response);
+                return Created($"/api/customers/{response.Id}", response);
             }
             catch (System.Exception ex)
             {

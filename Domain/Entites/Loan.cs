@@ -28,17 +28,32 @@ namespace DigitalLoanSystem.Domain.Entities
         {
             decimal monthlyAmount = strategy.CalculateMonthlyInstallment(PrincipalAmount, InterestRate, TermInMonths);
 
+            decimal totalInterest = PrincipalAmount * (InterestRate / 100) * TermInMonths;
+            decimal totalAmountToBePaid = PrincipalAmount + totalInterest;
+
+            decimal accumulatedAmount = 0; // O ana kadar yazılan taksitlerin toplamı
+
             for (int i = 1; i <= TermInMonths; i++)
             {
-                Installments.Add(new Installment
+                decimal currentInstallmentAmount = monthlyAmount;
+
+                // Eğer son taksitse, toplam tutardan o ana kadar hesaplananları çıkar ve kalanı yaz.
+                if (i == TermInMonths)
+                {
+                    currentInstallmentAmount = totalAmountToBePaid - accumulatedAmount;
+                }
+
+                this.Installments.Add(new Installment
                 {
                     Id = Guid.NewGuid(),
-                    LoanId = Id,
+                    LoanId = this.Id,
                     InstallmentNumber = i,
-                    Amount = monthlyAmount,
-                    DueDate = StartDate.AddMonths(i),
+                    Amount = currentInstallmentAmount,
+                    DueDate = this.StartDate.AddMonths(i),
                     Status = InstallmentStatus.Unpaid
                 });
+
+                accumulatedAmount += currentInstallmentAmount;
             }
         }
 

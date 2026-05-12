@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 
 builder.Services.AddScoped<ICreditScoreService, MockCreditScoreAdapter>();
 builder.Services.AddScoped<IPricingEngineService, MockPricingEngineAdapter>();
@@ -23,6 +24,7 @@ builder.Services.AddScoped<IPricingEngineService, MockPricingEngineAdapter>();
 // Application Services
 builder.Services.AddScoped<ILoanApplicationService, LoanApplicationService>();
 builder.Services.AddScoped<ICustomerApplicationService, CustomerApplicationService>();
+builder.Services.AddScoped<IInstallmentApplicationService, InstallmentApplicationService>();
 
 // Domain Factories
 builder.Services.AddSingleton<ILoanStrategyFactory, LoanStrategyFactory>();
