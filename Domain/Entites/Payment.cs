@@ -9,6 +9,6 @@ namespace DigitalLoanSystem.Domain.Entities
         public DateTime PaymentDate { get; set; }
         public decimal AmountPaid { get; set; }
 
-        public Installment Installment { get; set; }
+        public Installment? Installment { get; set; }
     }
 }

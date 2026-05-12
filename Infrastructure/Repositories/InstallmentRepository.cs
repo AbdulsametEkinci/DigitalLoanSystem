@@ -22,6 +22,7 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
         {
             return await _context.Installments
                 .AsNoTracking()
+                .Include(i => i.Payment)
                 .Where(i => i.LoanId == loanId)
                 .OrderBy(i => i.InstallmentNumber)
                 .ToListAsync();
@@ -30,7 +31,9 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
         public async Task<Installment?> GetByIdWithLoanAsync(Guid id)
         {
             return await _context.Installments
+                .Include(i => i.Payment)
                 .Include(i => i.Loan)
+                .ThenInclude(l => l.Installments)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 

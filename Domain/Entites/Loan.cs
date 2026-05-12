@@ -20,7 +20,7 @@ namespace DigitalLoanSystem.Domain.Entities
         public DateTime StartDate { get; set; }
         public LoanStatus Status { get; set; }
 
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
         public ICollection<Installment> Installments { get; set; } = new List<Installment>();
 
         // Creator (Taksitleri üretir)

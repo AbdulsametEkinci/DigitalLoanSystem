@@ -12,15 +12,17 @@ namespace DigitalLoanSystem.Domain.Entities
         public DateTime DueDate { get; set; }
         public InstallmentStatus Status { get; set; }
 
-        public Loan Loan { get; set; }
-        public Payment Payment { get; set; }
+        public Loan Loan { get; set; } = null!;
+        public Payment? Payment { get; set; }
 
         // Info Expert
-        public bool IsDelayed => Status == InstallmentStatus.Unpaid && DateTime.Now > DueDate;
+        public bool IsPaid => Status == InstallmentStatus.Paid || Payment != null;
+        public bool IsDelayed => !IsPaid && DateTime.Now > DueDate;
 
-        public void MarkAsPaid()
+        public void MarkAsPaid(Payment payment)
         {
             Status = InstallmentStatus.Paid;
+            Payment = payment;
         }
     }
 }

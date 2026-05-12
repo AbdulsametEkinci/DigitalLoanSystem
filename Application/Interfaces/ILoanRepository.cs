@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DigitalLoanSystem.Domain.Entities;
+using System.Collections.Generic;
 
 namespace DigitalLoanSystem.Application.Interfaces
 {
@@ -7,5 +8,7 @@ namespace DigitalLoanSystem.Application.Interfaces
     {
         // Oluşturulan Kredi (ve içindeki Taksitleri) veritabanına eklemeye yarar
         Task AddAsync(Loan loan);
+        Task<IEnumerable<Loan>> GetActiveLoansWithInstallmentsAsync(Guid customerId);
+
     }
 }

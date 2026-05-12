@@ -29,5 +29,24 @@ namespace DigitalLoanSystem.API.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
+        /// <summary>
+        /// UC-5: Müşterinin Borç ve Finansal Özetini getirir.
+        /// </summary>
+        [HttpGet("{id}/summary")] // RESTful URL: GET /api/customers/{id}/summary
+        public async Task<IActionResult> GetCustomerSummary(Guid id)
+        {
+            if (id == Guid.Empty)
+                return BadRequest("Geçerli bir Müşteri ID'si girmelisiniz.");
+
+            try
+            {
+                var summary = await _customerService.GetCustomerSummaryAsync(id);
+                return Ok(summary); // 200 OK
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { Error = "Özet hesaplanırken bir hata oluştu: " + ex.Message });
+            }
+        }
     }
 }

@@ -34,17 +34,18 @@ namespace DigitalLoanSystem.Application.Services
             if (installment == null)
                 throw new Exception("Taksit bulunamadı.");
 
+            if (installment.Loan == null)
+                throw new Exception("Kredi bilgisi bulunamadı.");
+
             if (installment.Loan.Status == LoanStatus.Closed)
                 throw new Exception("Bu kredi zaten kapatılmış.");
 
             // Taksit Zaten Ödenmiş Kontrolü
-            if (installment.Status == InstallmentStatus.Paid)
+            if (installment.IsPaid)
                 throw new Exception("Bu taksit zaten ödenmiş.");
 
             // UC-4 CONCURRENCY (Eşzamanlılık) KONTROLÜ MANTIĞI:
-            // Gerçekte burada Installment tablosunda "RowVersion" (Optimistic Concurrency) kontrolü yapılır.
-            // EF Core, Update atarken "Eğer bu satır benden önce başkası tarafından değiştirildiyse hata fırlat (DbUpdateConcurrencyException)" der.
-            // Bu sayede çift ödeme (double-spending) engellenir.
+            // IsPaid kontrolü + Payments(InstallmentId) unique index sayesinde çift ödeme engellenir.
 
             // Ödeme Altyapısına İstek At (ADAPTER)
             bool isPaymentSuccess = await _paymentGateway.ProcessPaymentAsync(installment.Amount, requestDto.CardNumber, requestDto.ExpiryDate);
@@ -62,7 +63,7 @@ namespace DigitalLoanSystem.Application.Services
             };
 
             // Taksidin durumunu güncelle
-            installment.MarkAsPaid();
+            installment.MarkAsPaid(payment);
 
             // Installment zaten EF Tracker'da olduğu için otomatik güncellenecek.
             await _installmentRepository.AddPaymentAsync(payment);

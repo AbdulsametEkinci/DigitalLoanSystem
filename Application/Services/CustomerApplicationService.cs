@@ -10,11 +10,13 @@ namespace DigitalLoanSystem.Application.Services
     public class CustomerApplicationService : ICustomerApplicationService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly ILoanRepository _loanRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerApplicationService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
+        public CustomerApplicationService(ICustomerRepository customerRepository, ILoanRepository loanRepository, IUnitOfWork unitOfWork)
         {
             _customerRepository = customerRepository;
+            _loanRepository = loanRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -41,5 +43,93 @@ namespace DigitalLoanSystem.Application.Services
                 "Müşteri başarıyla oluşturuldu."
             );
         }
+
+        public async Task<CustomerSummaryDto> GetCustomerSummaryAsync(Guid customerId)
+        {
+            var totalRemainingDebt = 0m;
+            var remainingPrincipal = 0m;
+            var delayedInstallmentsCount = 0;
+            var installments = new List<InstallmentSummaryDto>();
+            var unpaidInstallments = new List<InstallmentSummaryDto>();
+
+            // Müşterinin aktif kredilerini ve taksitlerini çek
+            var activeLoans = await _loanRepository.GetActiveLoansWithInstallmentsAsync(customerId);
+
+            // Aktif kredi yoksa, sıfır değerlerle dön.
+            if (activeLoans == null || !activeLoans.Any())
+            {
+                return new CustomerSummaryDto(
+                    totalRemainingDebt,
+                    remainingPrincipal,
+                    delayedInstallmentsCount,
+                    installments,
+                    unpaidInstallments
+                );
+            }
+
+            // Finansal Hesaplamalar
+            foreach (var loan in activeLoans)
+            {
+                var orderedInstallments = loan.Installments.OrderBy(i => i.DueDate).ToList();
+                var unpaid = orderedInstallments.Where(i => !i.IsPaid).ToList();
+                var paidInstallmentsCount = orderedInstallments.Count(i => i.IsPaid);
+
+                // A. Toplam Kredi Borcu
+                totalRemainingDebt += unpaid.Sum(i => i.Amount);
+
+                // B. Kalan Anapara (Ödenen taksit sayısı oranında anapara azalır)
+                // Her ödenen taksit, anapranın 1/TermInMonths'unu emekli eder
+                int remainingMonths = loan.TermInMonths - paidInstallmentsCount;
+                decimal remaining = (remainingMonths > 0) 
+                    ? loan.PrincipalAmount * remainingMonths / loan.TermInMonths 
+                    : 0m;
+                remainingPrincipal += remaining;
+
+                // C. Gecikmiş Taksit Sayısı
+                delayedInstallmentsCount += unpaid.Count(i => i.IsDelayed);
+
+                // D. Taksit Listesini DTO'ya dönüştür ve ekle (Ödenen/Ödenmeyen dahil)
+                foreach (var installment in orderedInstallments)
+                {
+                    bool isPaid = installment.IsPaid;
+                    bool isDelayed = installment.IsDelayed;
+                    string statusDisplay = isPaid ? "Ödendi" : (isDelayed ? "Gecikmiş" : "Ödenmedi");
+
+                    var dto = new InstallmentSummaryDto(
+                        installment.LoanId,
+                        installment.InstallmentNumber,
+                        installment.Amount,
+                        installment.DueDate,
+                        isDelayed,
+                        isPaid,
+                        statusDisplay
+                    );
+
+                    installments.Add(dto);
+
+                    if (!isPaid)
+                    {
+                        unpaidInstallments.Add(dto);
+                    }
+                }
+            }
+
+            // tarihe göre sırla
+            installments = installments.OrderBy(i => i.DueDate).ToList();
+            unpaidInstallments = unpaidInstallments.OrderBy(i => i.DueDate).ToList();
+
+            // Küsüratları yuvarla
+            totalRemainingDebt = Math.Round(totalRemainingDebt, 2);
+            remainingPrincipal = Math.Round(remainingPrincipal, 2);
+
+            return new CustomerSummaryDto(
+                totalRemainingDebt,
+                remainingPrincipal,
+                delayedInstallmentsCount,
+                installments,
+                unpaidInstallments
+            );
+        }
+
     }
 }

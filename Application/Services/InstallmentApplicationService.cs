@@ -28,8 +28,8 @@ namespace DigitalLoanSystem.Application.Services
                 i.InstallmentNumber,
                 i.Amount,
                 i.DueDate,
-                i.Status == Domain.Enums.InstallmentStatus.Paid 
-                    ? "Ödendi" 
+                i.IsPaid
+                    ? "Ödendi"
                     : (i.IsDelayed ? "Gecikmiş" : "Ödenmedi")
             ));
 

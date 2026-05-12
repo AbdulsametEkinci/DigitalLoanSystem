@@ -37,6 +37,13 @@ namespace DigitalLoanSystem.Application.Services
 
         public async Task<LoanResponseDto> ApplyForLoanAsync(CreateLoanRequestDto requestDto)
         {
+            // Girdi Validasyonu
+            if (requestDto.PrincipalAmount <= 0)
+                throw new Exception("Kredi tutarı sıfırdan büyük olmalıdır.");
+            
+            if (requestDto.TermInMonths <= 0)
+                throw new Exception("Kredi vadesi sıfırdan büyük olmalıdır.");
+
             // Müşteriyi veritabanından bul
             var customer = await _customerRepository.GetByIdAsync(requestDto.CustomerId);
             if (customer == null)
