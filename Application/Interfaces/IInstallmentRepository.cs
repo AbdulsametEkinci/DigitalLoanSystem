@@ -8,5 +8,8 @@ namespace DigitalLoanSystem.Application.Interfaces
     public interface IInstallmentRepository
     {
         Task<IEnumerable<Installment>> GetByLoanIdAsync(Guid loanId);
+
+        Task<Installment?> GetByIdWithLoanAsync(Guid id);
+        Task AddPaymentAsync(Payment payment);
     }
 }

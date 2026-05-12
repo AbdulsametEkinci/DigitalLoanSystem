@@ -20,11 +20,13 @@ builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
 
 builder.Services.AddScoped<ICreditScoreService, MockCreditScoreAdapter>();
 builder.Services.AddScoped<IPricingEngineService, MockPricingEngineAdapter>();
+builder.Services.AddScoped<IPaymentGateway, LegacyApiPaymentAdapter>();
 
 // Application Services
 builder.Services.AddScoped<ILoanApplicationService, LoanApplicationService>();
 builder.Services.AddScoped<ICustomerApplicationService, CustomerApplicationService>();
 builder.Services.AddScoped<IInstallmentApplicationService, InstallmentApplicationService>();
+builder.Services.AddScoped<IPaymentApplicationService, PaymentApplicationService>();
 
 // Domain Factories
 builder.Services.AddSingleton<ILoanStrategyFactory, LoanStrategyFactory>();

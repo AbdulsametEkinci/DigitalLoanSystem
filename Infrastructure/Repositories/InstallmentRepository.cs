@@ -20,12 +20,23 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Installment>> GetByLoanIdAsync(Guid loanId)
         {
-            // AsNoTracking: Sadece okuma yapacağımız için EF Core nesneleri izlemesin (Performans)
             return await _context.Installments
                 .AsNoTracking()
                 .Where(i => i.LoanId == loanId)
                 .OrderBy(i => i.InstallmentNumber)
                 .ToListAsync();
+        }
+
+        public async Task<Installment?> GetByIdWithLoanAsync(Guid id)
+        {
+            return await _context.Installments
+                .Include(i => i.Loan)
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task AddPaymentAsync(Payment payment)
+        {
+            await _context.Payments.AddAsync(payment);
         }
     }
 }

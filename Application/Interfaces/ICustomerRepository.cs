@@ -6,8 +6,7 @@ namespace DigitalLoanSystem.Application.Interfaces
 {
     public interface ICustomerRepository
     {
-        // Gelen ID'ye göre veritabanından müşteriyi bulup getirecek
-        Task<Customer> GetByIdAsync(Guid id);
+        Task<Customer?> GetByIdAsync(Guid id);
         Task AddAsync(Customer customer);
     }
 }
