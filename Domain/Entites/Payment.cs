@@ -5,7 +5,7 @@ namespace DigitalLoanSystem.Domain.Entities
     public class Payment
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Guid InstallmentId { get; set; }
+        public Guid? InstallmentId { get; set; }  // Nullable: erken ödeme için (taksite bağlı olmayabilir)
         public DateTime PaymentDate { get; set; }
         public decimal AmountPaid { get; set; }
 

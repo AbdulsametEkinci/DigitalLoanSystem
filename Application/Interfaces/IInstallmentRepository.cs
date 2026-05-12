@@ -11,5 +11,12 @@ namespace DigitalLoanSystem.Application.Interfaces
 
         Task<Installment?> GetByIdWithLoanAsync(Guid id);
         Task AddPaymentAsync(Payment payment);
+        Task AddInstallmentsAsync(IEnumerable<Installment> installments);
+
+        /// <summary>
+        /// Belirtilen kredi için ödenmemiş taksitlerin durumunu "Canceled" olarak günceller.
+        /// Softdelete mantığı ile veritabanından silmez, sadece Status'u değiştirir.
+        /// </summary>
+        Task CancelUnpaidInstallmentsByLoanIdAsync(Guid loanId);
     }
 }

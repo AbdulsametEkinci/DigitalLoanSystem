@@ -48,11 +48,14 @@ namespace DigitalLoanSystem.Infrastructure.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.CanceledDate).HasColumnType("datetime(6)").IsRequired(false);
 
                 entity.HasOne(e => e.Loan)
                       .WithMany(l => l.Installments)
                       .HasForeignKey(e => e.LoanId)
                       .OnDelete(DeleteBehavior.Cascade); // Kredi silinirse taksitler silinsin
+
+                entity.HasIndex(e => new { e.LoanId, e.Status }); // UC-6 için soft-delete sorgularının performansı
             });
 
             // PAYMENT (1 Taksit -> En fazla 1 Ödeme)
@@ -64,7 +67,8 @@ namespace DigitalLoanSystem.Infrastructure.Data
                 entity.HasOne(e => e.Installment)
                       .WithOne(i => i.Payment)
                       .HasForeignKey<Payment>(e => e.InstallmentId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Restrict)
+                      .IsRequired(false); // Nullable FK: erken ödeme için
             });
         }
     }

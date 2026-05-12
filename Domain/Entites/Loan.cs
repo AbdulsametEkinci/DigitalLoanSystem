@@ -64,5 +64,13 @@ namespace DigitalLoanSystem.Domain.Entities
                 Status = LoanStatus.Closed;
             }
         }
+
+        public void CancelUnpaidInstallments()
+        {
+            foreach (var installment in Installments.Where(i => i.Status == InstallmentStatus.Unpaid))
+            {
+                installment.MarkAsCanceled();
+            }
+        }
     }
 }

@@ -60,6 +60,9 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime?>("CanceledDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime(6)");
 
@@ -74,7 +77,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoanId");
+                    b.HasIndex("LoanId", "Status");
 
                     b.ToTable("Installments");
                 });
@@ -122,7 +125,7 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("AmountPaid")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("InstallmentId")
+                    b.Property<Guid?>("InstallmentId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("PaymentDate")
@@ -163,8 +166,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("DigitalLoanSystem.Domain.Entities.Installment", "Installment")
                         .WithOne("Payment")
                         .HasForeignKey("DigitalLoanSystem.Domain.Entities.Payment", "InstallmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Installment");
                 });
@@ -176,8 +178,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("DigitalLoanSystem.Domain.Entities.Installment", b =>
                 {
-                    b.Navigation("Payment")
-                        .IsRequired();
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("DigitalLoanSystem.Domain.Entities.Loan", b =>

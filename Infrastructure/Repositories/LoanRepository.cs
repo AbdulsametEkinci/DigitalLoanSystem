@@ -35,5 +35,16 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
                 .Where(l => l.CustomerId == customerId && l.Status == Domain.Enums.LoanStatus.Active)
                 .ToListAsync();
         }
+
+        public async Task<Loan?> GetByIdWithAllInstallmentsAsync(Guid loanId)
+        {
+            // Yeniden yapılandırma için tüm taksitleri (paid, unpaid, canceled) yükle
+            // Tracking aktif çünkü update
+            return await _context.Loans
+                .Include(l => l.Customer)  // FK validation için Customer'ı da yükle
+                .Include(l => l.Installments)
+                .ThenInclude(i => i.Payment)
+                .FirstOrDefaultAsync(l => l.Id == loanId);
+        }
     }
 }

@@ -27,6 +27,8 @@ builder.Services.AddScoped<ILoanApplicationService, LoanApplicationService>();
 builder.Services.AddScoped<ICustomerApplicationService, CustomerApplicationService>();
 builder.Services.AddScoped<IInstallmentApplicationService, InstallmentApplicationService>();
 builder.Services.AddScoped<IPaymentApplicationService, PaymentApplicationService>();
+builder.Services.AddScoped<IPrincipalCalculationService, PrincipalCalculationService>();
+builder.Services.AddScoped<IPartialEarlyRepaymentService, PartialEarlyRepaymentService>();
 
 // Domain Factories
 builder.Services.AddSingleton<ILoanStrategyFactory, LoanStrategyFactory>();

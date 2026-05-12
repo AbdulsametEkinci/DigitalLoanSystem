@@ -22,6 +22,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{8
 		{C0B0E8F0-2BE7-4F60-9DD8-5B60AA556E83} = {C0B0E8F0-2BE7-4F60-9DD8-5B60AA556E83}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{A9D3950C-F2D7-4039-A594-84C72DC80349}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C0B0E8F0-2BE7-4F60-9DD8-5B60AA556E83} = {C0B0E8F0-2BE7-4F60-9DD8-5B60AA556E83}
+		{FEE42837-1E9A-4977-99F5-B951F5DC34B0} = {FEE42837-1E9A-4977-99F5-B951F5DC34B0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +50,10 @@ Global
 		{854DF046-B6B4-40DD-9767-26BC833BFABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{854DF046-B6B4-40DD-9767-26BC833BFABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{854DF046-B6B4-40DD-9767-26BC833BFABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9D3950C-F2D7-4039-A594-84C72DC80349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D3950C-F2D7-4039-A594-84C72DC80349}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D3950C-F2D7-4039-A594-84C72DC80349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D3950C-F2D7-4039-A594-84C72DC80349}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -68,7 +68,8 @@ namespace Infrastructure.Migrations
                     InstallmentNumber = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CanceledDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -87,7 +88,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    InstallmentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    InstallmentId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     PaymentDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     AmountPaid = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -110,9 +111,9 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Installments_LoanId",
+                name: "IX_Installments_LoanId_Status",
                 table: "Installments",
-                column: "LoanId");
+                columns: new[] { "LoanId", "Status" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_CustomerId",

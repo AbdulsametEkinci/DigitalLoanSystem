@@ -41,5 +41,22 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
         {
             await _context.Payments.AddAsync(payment);
         }
+
+        public async Task AddInstallmentsAsync(IEnumerable<Installment> installments)
+        {
+            await _context.Installments.AddRangeAsync(installments);
+        }
+
+        public async Task CancelUnpaidInstallmentsByLoanIdAsync(Guid loanId)
+        {
+            var unpaidInstallments = await _context.Installments
+                .Where(i => i.LoanId == loanId && i.Status == Domain.Enums.InstallmentStatus.Unpaid)
+                .ToListAsync();
+
+            foreach (var installment in unpaidInstallments)
+            {
+                installment.MarkAsCanceled();
+            }
+        }
     }
 }

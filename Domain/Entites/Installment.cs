@@ -11,6 +11,7 @@ namespace DigitalLoanSystem.Domain.Entities
         public decimal Amount { get; set; }
         public DateTime DueDate { get; set; }
         public InstallmentStatus Status { get; set; }
+        public DateTime? CanceledDate { get; set; }
 
         public Loan Loan { get; set; } = null!;
         public Payment? Payment { get; set; }
@@ -23,6 +24,12 @@ namespace DigitalLoanSystem.Domain.Entities
         {
             Status = InstallmentStatus.Paid;
             Payment = payment;
+        }
+
+        public void MarkAsCanceled()
+        {
+            Status = InstallmentStatus.Canceled;
+            CanceledDate = DateTime.Now;
         }
     }
 }
