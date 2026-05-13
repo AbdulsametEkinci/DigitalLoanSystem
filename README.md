@@ -139,7 +139,7 @@ erDiagram
         decimal PrincipalAmount "Anapara"
         int TermInMonths "Vade"
         decimal InterestRate "Faiz Oranı"
-        int Status "0:Active, 1:Closed, 2:Cancelled"
+        int Status "1:Active, 2:Closed"
         datetime CreatedDate
     }
     
@@ -268,7 +268,7 @@ npm run test  # Frontend testleri
 
 ## 📝 İş Kuralları
 
-### Kredi Onayı
+### Kredi Onayı (Henüz implement edilmedi)
 - Müşteri credit score ≥ 500 ise kredi onaylanır
 - Kredi tutar: Min 1.000 TL, Max 500.000 TL
 - Vade: Min 3 ay, Max 120 ay
