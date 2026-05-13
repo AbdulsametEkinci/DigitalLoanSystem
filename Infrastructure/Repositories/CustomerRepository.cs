@@ -20,10 +20,22 @@ namespace DigitalLoanSystem.Infrastructure.Repositories
         {
             return await _context.Customers.FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Customer?> GetByIdentityNumberAsync(string identityNumber)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(c => c.IdentityNumber == identityNumber);
+        }
+
+        public async Task<List<Customer>> GetAllAsync()
+        {
+            return await _context.Customers.ToListAsync();
+        }
+
         public async Task AddAsync(Customer customer)
         {
             await _context.Customers.AddAsync(customer);
         }
+
         public async Task DeleteAsync(Customer customer)
         {
             _context.Customers.Remove(customer);

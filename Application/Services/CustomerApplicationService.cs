@@ -22,7 +22,10 @@ namespace DigitalLoanSystem.Application.Services
 
         public async Task<CustomerResponseDto> CreateCustomerAsync(CreateCustomerDto dto)
         {
-            // İleride buraya "TCKN sistemde zaten var mı?" kontrolü eklenebilir.
+            // Duplicate TCKN kontrolü
+            var existingCustomer = await _customerRepository.GetByIdentityNumberAsync(dto.IdentityNumber);
+            if (existingCustomer != null)
+                throw new InvalidOperationException($"TCKN '{dto.IdentityNumber}' zaten sistemde kayıtlı.");
 
             var customer = new Customer
             {
@@ -141,6 +144,54 @@ namespace DigitalLoanSystem.Application.Services
             await _customerRepository.DeleteAsync(customer);
             await _unitOfWork.CommitAsync();
             return true;
+        }
+
+        public async Task<GetCustomerDto> GetCustomerAsync(Guid customerId)
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new InvalidOperationException($"Müşteri ID'si {customerId} bulunamadı.");
+
+            return new GetCustomerDto(
+                customer.Id,
+                customer.IdentityNumber,
+                customer.FullName,
+                customer.Email,
+                customer.PhoneNumber
+            );
+        }
+
+        public async Task<GetCustomerDto> UpdateCustomerAsync(Guid customerId, UpdateCustomerDto dto)
+        {
+            var customer = await _customerRepository.GetByIdAsync(customerId);
+            if (customer == null)
+                throw new InvalidOperationException($"Müşteri ID'si {customerId} bulunamadı.");
+
+            customer.FullName = dto.FullName;
+            customer.Email = dto.Email;
+            customer.PhoneNumber = dto.PhoneNumber;
+
+            await _unitOfWork.CommitAsync();
+
+            return new GetCustomerDto(
+                customer.Id,
+                customer.IdentityNumber,
+                customer.FullName,
+                customer.Email,
+                customer.PhoneNumber
+            );
+        }
+
+        public async Task<List<GetCustomerDto>> GetAllCustomersAsync()
+        {
+            var customers = await _customerRepository.GetAllAsync();
+            return customers.Select(c => new GetCustomerDto(
+                c.Id,
+                c.IdentityNumber,
+                c.FullName,
+                c.Email,
+                c.PhoneNumber
+            )).ToList();
         }
 
     }
