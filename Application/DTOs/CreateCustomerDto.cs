@@ -10,6 +10,22 @@ namespace DigitalLoanSystem.Application.DTOs
          string PhoneNumber
     );
 
+    public record UpdateCustomerDto
+    (
+         string FullName,
+         string Email,
+         string PhoneNumber
+    );
+
+    public record GetCustomerDto
+    (
+         Guid Id,
+         string IdentityNumber,
+         string FullName,
+         string Email,
+         string PhoneNumber
+    );
+
     public record CustomerResponseDto
     (
          Guid Id,

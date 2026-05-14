@@ -35,6 +35,15 @@ builder.Services.AddSingleton<ILoanStrategyFactory, LoanStrategyFactory>();
 
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReact", policy => 
+        policy.SetIsOriginAllowed(origin => true) // Bütün originlere (127.0.0.1 dahil) izin ver
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,6 +58,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowReact");
 app.UseAuthorization();
 app.MapControllers();
 
